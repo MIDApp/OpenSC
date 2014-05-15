@@ -562,6 +562,24 @@ iso7816_get_challenge(struct sc_card *card, u8 *rnd, size_t len)
 	return 0;
 }
 
+static int
+iso7816_give_random(struct sc_card *card, u8 *rnd, size_t len)
+{
+	int r;
+	struct sc_apdu apdu;
+
+	if (rnd == NULL || len == 0)
+		return SC_ERROR_INVALID_ARGUMENTS;
+
+	sc_format_apdu(card, &apdu, SC_APDU_CASE_3_SHORT, 0x86, 0x00, 0x00);
+	apdu.cla = 0x80;
+	apdu.data = rnd;
+	apdu.lc = apdu.datalen = len;
+
+	r = sc_transmit_apdu(card, &apdu);
+	LOG_TEST_RET(card->ctx, r, "APDU transmit failed");
+	return sc_check_sw(card, apdu.sw1, apdu.sw2);
+}
 
 static int
 iso7816_construct_fci(struct sc_card *card, const sc_file_t *file,
@@ -1093,6 +1111,7 @@ static struct sc_card_operations iso_ops = {
 	iso7816_select_file,
 	iso7816_get_response,
 	iso7816_get_challenge,
+	iso7816_give_random,
 	NULL,			/* verify */
 	NULL,			/* logout */
 	iso7816_restore_security_env,
