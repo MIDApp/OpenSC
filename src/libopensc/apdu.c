@@ -307,7 +307,8 @@ sc_check_apdu(sc_card_t *card, const sc_apdu_t *apdu)
 		break;
 	case SC_APDU_CASE_3_SHORT:
 		/* data is sent           */
-		if (apdu->datalen == 0 || apdu->data == NULL || apdu->lc == 0)
+		/* but lc == 0 is used by some cards */
+		if (apdu->datalen == 0 || apdu->data == NULL)
 			goto error;
 		/* no data is expected    */
 		if (apdu->le != 0)
