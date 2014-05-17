@@ -221,6 +221,13 @@ struct sm_dh_session {
 	unsigned char ssc[8];
 };
 
+struct sm_cns_session {
+	unsigned char host_challenge[SM_SMALL_CHALLENGE_LEN];
+	unsigned char card_challenge[SM_SMALL_CHALLENGE_LEN];
+
+	unsigned char symmetric_key[24];
+};
+
 /*
  * @struct sc_info is the
  *	placehold for the secure messaging working data:
@@ -241,6 +248,7 @@ struct sm_info   {
 		struct sm_gp_session gp;
 		struct sm_cwa_session cwa;
 		struct sm_dh_session dh;
+		struct sm_cns_session cns;
 	} session;
 
 	struct sc_serial_number serialnr;
