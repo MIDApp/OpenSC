@@ -224,17 +224,16 @@ static int itacns_add_cert(sc_pkcs15_card_t *p15card,
 	strlcpy(obj.label, label, sizeof(obj.label));
 	obj.flags = obj_flags;
 
+	r = sc_pkcs15_read_certificate(p15card, &info, &cert);
+	SC_TEST_RET(p15card->card->ctx, SC_LOG_DEBUG_NORMAL, r,
+		"Could not read X.509 certificate");
+
 	r = sc_pkcs15emu_add_x509_cert(p15card, &obj, &info);
 	SC_TEST_RET(p15card->card->ctx, SC_LOG_DEBUG_NORMAL, r,
 		"Could not add X.509 certificate");
 
 	/* If we have OpenSSL, read keyUsage */
 #ifdef ENABLE_OPENSSL
-
-	r = sc_pkcs15_read_certificate(p15card, &info, &cert);
-	SC_TEST_RET(p15card->card->ctx, SC_LOG_DEBUG_NORMAL, r,
-		"Could not read X.509 certificate");
-
 	{
 		const u8 *throwaway = cert->data.value;
 		x509 = d2i_X509(NULL, &throwaway, cert->data.len);
@@ -831,6 +830,14 @@ static int itacns_init(sc_pkcs15_card_t *p15card)
 	/* Digital signature */
 	r = itacns_check_and_add_keyset(p15card, "CNS1", 0x10,
 		0, "3F0014009010", "3F00140081108010", "3F0014008110",
+		0x1a, &found_certs);
+	SC_TEST_RET(p15card->card->ctx, SC_LOG_DEBUG_NORMAL, r,
+		"Could not add CNS1");
+	certificate_count += found_certs;
+
+	/* Digital signature */
+	r = itacns_check_and_add_keyset(p15card, "CNS1", 0x11,
+		0, "3F0014009011", "3F00140081108011", "3F0014008110",
 		0x1a, &found_certs);
 	SC_TEST_RET(p15card->card->ctx, SC_LOG_DEBUG_NORMAL, r,
 		"Could not add CNS1");
