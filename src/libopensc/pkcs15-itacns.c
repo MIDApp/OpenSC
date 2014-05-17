@@ -262,6 +262,7 @@ static int itacns_add_pubkey(sc_pkcs15_card_t *p15card,
 	 const sc_path_t *path, const sc_pkcs15_id_t *id, const char *label,
 	int usage, int ref, int obj_flags, int *modulus_len_out)
 {
+#if 0
 	int r;
 	sc_pkcs15_pubkey_info_t info;
 	sc_pkcs15_object_t obj;
@@ -290,6 +291,9 @@ static int itacns_add_pubkey(sc_pkcs15_card_t *p15card,
 	SC_TEST_RET(p15card->card->ctx, SC_LOG_DEBUG_NORMAL, r,
 		"Could not add pub key");
 	return r;
+#else
+	return 0;
+#endif
 }
 
 static int itacns_add_prkey(sc_pkcs15_card_t *p15card,
@@ -576,6 +580,7 @@ static int itacns_add_keyset(sc_pkcs15_card_t *p15card,
 
 	/* Public key; not really needed */
 	/* FIXME: set usage according to the certificate. */
+#if 0
 	if (pubkey_path) {
 		sc_format_path(pubkey_path, &path);
 		r = itacns_add_pubkey(p15card, &path, cert_id, label,
@@ -583,6 +588,7 @@ static int itacns_add_keyset(sc_pkcs15_card_t *p15card,
 		SC_TEST_RET(p15card->card->ctx, SC_LOG_DEBUG_NORMAL, r,
 			"Could not add public key");
 	}
+#endif
 
 	/*
 	 * FIXME: usage should be inferred from the X.509 certificate, and not
