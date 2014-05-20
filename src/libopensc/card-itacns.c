@@ -232,8 +232,6 @@ static int itacns_init(sc_card_t *card)
 
 	/* Set up algorithm info. */
 	flags = SC_ALGORITHM_NEED_USAGE
-		/*| SC_ALGORITHM_RSA_RAW*/
-		| SC_ALGORITHM_RSA_HASHES
 		| SC_ALGORITHM_RSA_PAD_PKCS1
 		;
 	_sc_card_add_rsa_alg(card, 1024, flags, 0);
