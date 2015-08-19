@@ -41,6 +41,7 @@
 
 #ifdef ENABLE_ITACNS_SM
 #include <openssl/evp.h>
+#include <openssl/rand.h>
 #endif
 
 #define ITACNS_MAX_PAYLOAD 0xff
